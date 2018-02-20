@@ -10,7 +10,7 @@ namespace Microsoft.AspNetCore.Blazor.Components
     // IMPORTANT
     //
     // Many of these names are used in code generation. Keep these in sync with the code generation code
-    // See: src/Microsoft.AspNetCore.Blazor.Razor.Extensions/BlazorComponent.cs
+    // See: src/Microsoft.AspNetCore.Blazor.Razor.Extensions/BlazorApi.cs
 
     /// <summary>
     /// Optional base class for Blazor components. Alternatively, Blazor components may
