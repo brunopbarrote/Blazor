@@ -18,9 +18,9 @@ namespace Microsoft.AspNetCore.Blazor.Razor
             }
 
             FunctionsDirective.Register(builder);
+            ImplementsDirective.Register(builder);
             InheritsDirective.Register(builder);
-            TemporaryLayoutPass.Register(builder);
-            TemporaryImplementsPass.Register(builder);
+            LayoutDirective.Register(builder);
 
             builder.Features.Remove(builder.Features.OfType<IImportProjectFeature>().Single());
             builder.Features.Add(new BlazorImportProjectFeature());
@@ -40,9 +40,9 @@ namespace Microsoft.AspNetCore.Blazor.Razor
             }
 
             FunctionsDirective.Register(builder);
+            ImplementsDirective.Register(builder);
             InheritsDirective.Register(builder);
-            TemporaryLayoutPass.Register(builder);
-            TemporaryImplementsPass.Register(builder);
+            LayoutDirective.Register(builder);
 
             builder.Features.Add(new ConfigureBlazorCodeGenerationOptions());
 
