@@ -168,6 +168,12 @@ export class BrowserRenderer {
     const browserRendererId = this.browserRendererId;
     const eventHandlerId = renderTreeFrame.attributeEventHandlerId(attributeFrame);
 
+    if (attributeName === 'value') {
+      if (this.tryApplyValueProperty(toDomElement, renderTreeFrame.attributeValue(attributeFrame))) {
+        return; // If this DOM element type has special 'value' handling, don't also write it as an attribute
+      }
+    }
+
     // TODO: Instead of applying separate event listeners to each DOM element, use event delegation
     // and remove all the _blazor*Listener hacks
     switch (attributeName) {
@@ -205,6 +211,18 @@ export class BrowserRenderer {
           renderTreeFrame.attributeValue(attributeFrame)!
         );
         break;
+    }
+  }
+
+  tryApplyValueProperty(element: Element, value: string | null) {
+    // Certain elements have built-in behaviour for their 'value' property
+    switch (element.tagName) {
+      case 'INPUT':
+      case 'SELECT': // Note: this doen't handle <select> correctly: https://github.com/aspnet/Blazor/issues/157
+        (element as any).value = value;
+        return true;
+      default:
+        return false;
     }
   }
 

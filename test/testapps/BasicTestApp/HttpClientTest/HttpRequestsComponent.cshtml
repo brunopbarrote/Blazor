@@ -1,0 +1,68 @@
+﻿@using System.Net
+@using Microsoft.AspNetCore.Blazor.Services
+@using Microsoft.AspNetCore.Blazor.Browser.Services.Temporary
+@inject IUriHelper UriHelper
+@inject HttpClient Http
+<h1>HTTP request tester</h1>
+
+<p>
+    <div>URI:</div>
+    <input id="request-uri" value=@uri @onchange(value => { uri = (string)value; }) />
+</p>
+
+<p>
+    <div>Method:</div>
+    <select id="request-method" value=@method @onchange(value => { method = (string)value; })>
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+    </select>
+</p>
+
+<p>
+    <div>Request body:</div>
+    <textarea value=@requestBody @onchange(value => { requestBody = (string)value; })></textarea>
+</p>
+
+<button @onclick(DoRequest)>Request</button>
+
+@if (responseStatusCode.HasValue)
+{
+    <h2>Response</h2>
+    <p><div>Status:</div> @responseStatusCode</p>
+    <p><div>Body:</div><textarea readonly>@responseBody</textarea></p>
+}
+
+<style type="text/css">
+    textarea { width: 100%; height: 60px; }
+</style>
+
+@functions {
+    string uri = "/";
+    string method = "GET";
+    string requestBody = "";
+    HttpStatusCode? responseStatusCode;
+    string responseBody;
+
+    async void DoRequest()
+    {
+        responseStatusCode = null;
+
+        try
+        {
+            var response = await Http.GetAsync(uri);
+            responseStatusCode = response.StatusCode;
+            responseBody = await response.Content.ReadAsStringAsync();
+        }
+        catch (Exception ex)
+        {
+            if (ex is AggregateException)
+            {
+                ex = ex.InnerException;
+            }
+            responseStatusCode = HttpStatusCode.SeeOther;
+            responseBody = ex.Message;
+        }
+
+        StateHasChanged();
+    }
+}
